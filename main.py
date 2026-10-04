@@ -5,11 +5,11 @@ import tarfile
 
 def download_and_run_hemi():
     # تحميل الإصدار الرسمي الأحدث والمستقر لعقدة Hemi
-    version = "v0.4.3"
-    
-    # تم إصلاح الرابط بالكامل هنا وإضافة حساب الشركة ومجلد التحميل الرسمي
-    url = "https://github.com" + version + "/heminetwork_" + version + "_linux_amd64.tar.gz"
+    part1 = "https://github.com"
+    part2 = "download/v0.4.3/heminetwork_v0.4.3_linux_amd64.tar.gz"
+    url = part1 + part2
     archive = "hemi.tar.gz"
+
     
     print("Automated Miner -> Downloading official Hemi PoP Miner archive...")
     response = requests.get(url, stream=True)
