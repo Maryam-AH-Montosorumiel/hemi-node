@@ -1,44 +1,43 @@
 import os
 import subprocess
-import requests
+import urllib.request
 import tarfile
 
 def download_and_run_hemi():
-    # تحميل الإصدار الرسمي الأحدث والمستقر لعقدة Hemi
-    part1 = "https://github.com"
-    part2 = "download/v0.4.3/heminetwork_v0.4.3_linux_amd64.tar.gz"
-    url = part1 + part2
     archive = "hemi.tar.gz"
-
     
-    print("Automated Miner -> Downloading official Hemi PoP Miner archive...")
-    response = requests.get(url, stream=True)
-    with open(archive, "wb") as f:
-        f.write(response.content)
+    # رابط مباشر ومقسم برمجياً لضمان عدم القص أو التداخل من المتصفح
+    host = "https://github.com"
+    path = "/hemilabs/heminetwork/releases/download/v0.4.3/heminetwork_v0.4.3_linux_amd64.tar.gz"
+    full_url = host + path
+    
+    print("🤖 Automated Miner -> Downloading Hemi Node...")
+    try:
+        # استخدام مكتبة النظام الرسمية للتحميل لضمان الاستقرار
+        urllib.request.urlretrieve(full_url, archive)
+    except Exception as e:
+        print(f"❌ Download failed: {str(e)}")
+        return
         
-    print("Automated Miner -> Extracting official node files...")
+    print("📦 Automated Miner -> Extracting official node files...")
     with tarfile.open(archive, "r:gz") as tar:
         tar.extractall()
         
-    # الانتقال إلى مجلد العقدة المستخرج
-    folder_name = "heminetwork_" + version + "_linux_amd64"
-    os.chdir(folder_name)
+    # الانتقال إلى المجلد المستخرج وتشغيل العقدة
+    os.chdir("heminetwork_v0.4.3_linux_amd64")
     
-    # قراءة المفتاح الخاص الآمن من إعدادات Render
     private_key = os.environ.get("HEMI_PRIVATE_KEY")
     if not private_key:
         print("❌ Error: HEMI_PRIVATE_KEY environment variable is missing!")
         return
 
-    print("Automated Miner -> Booting Hemi PoP Miner on Cloud Network...")
+    print("🚀 Booting Hemi PoP Miner on Cloud Network...")
     cmd = "./popmd"
     
-    # تهيئة بيئة الاتصال المباشر بالسيرفر بدون بروكسيات وهمية
     env = os.environ.copy()
     env["POPMD_PRIVATE_KEY"] = private_key
     env["POPMD_STATIC_PEERS"] = "/dns4/popm.testnet.hemi.network/tcp/443/wss"
     
-    # تشغيل العقدة الرسمية بالخلفية وطباعة السجلات أولاً بأول
     process = subprocess.Popen(cmd, shell=True, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     for line in process.stdout:
         print(line, end="")
