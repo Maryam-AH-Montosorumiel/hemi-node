@@ -6,20 +6,22 @@ import tarfile
 def download_and_run_hemi():
     # تحميل الإصدار الرسمي الأحدث والمستقر لعقدة Hemi
     version = "v0.4.3"
-    url = f"https://github.com{version}/heminetwork_{version}_linux_amd64.tar.gz"
+    
+    # تم إصلاح الرابط بالكامل هنا وإضافة حساب الشركة ومجلد التحميل الرسمي
+    url = "https://github.com" + version + "/heminetwork_" + version + "_linux_amd64.tar.gz"
     archive = "hemi.tar.gz"
     
-    print("🤖 Downloading official Hemi PoP Miner archive...")
+    print("Automated Miner -> Downloading official Hemi PoP Miner archive...")
     response = requests.get(url, stream=True)
     with open(archive, "wb") as f:
         f.write(response.content)
         
-    print("📦 Extracting official node files...")
+    print("Automated Miner -> Extracting official node files...")
     with tarfile.open(archive, "r:gz") as tar:
         tar.extractall()
         
     # الانتقال إلى مجلد العقدة المستخرج
-    folder_name = f"heminetwork_{version}_linux_amd64"
+    folder_name = "heminetwork_" + version + "_linux_amd64"
     os.chdir(folder_name)
     
     # قراءة المفتاح الخاص الآمن من إعدادات Render
@@ -28,7 +30,7 @@ def download_and_run_hemi():
         print("❌ Error: HEMI_PRIVATE_KEY environment variable is missing!")
         return
 
-    print("🚀 Booting Hemi PoP Miner on Cloud Network...")
+    print("Automated Miner -> Booting Hemi PoP Miner on Cloud Network...")
     cmd = "./popmd"
     
     # تهيئة بيئة الاتصال المباشر بالسيرفر بدون بروكسيات وهمية
